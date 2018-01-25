@@ -29,6 +29,7 @@
 #include "function/date_functions.h"
 #include "function/decimal_functions.h"
 #include "function/old_engine_string_functions.h"
+#include "function/string_functions.h"
 #include "function/timestamp_functions.h"
 #include "index/index_factory.h"
 #include "settings/settings_manager.h"
@@ -1060,7 +1061,18 @@ void Catalog::InitializeFunctions() {
           function::BuiltInFuncType{OperatorId::Like,
                                     function::OldEngineStringFunctions::Like},
           txn);
-
+      AddBuiltinFunction(
+          "upper", {type::TypeId::VARCHAR}, type::TypeId::VARCHAR,
+          internal_lang, "upper",
+          function::BuiltInFuncType{OperatorId::Upper,
+                                    function::StringFunctions::_Upper},
+          txn);
+      AddBuiltinFunction(
+          "lower", {type::TypeId::VARCHAR}, type::TypeId::VARCHAR,
+          internal_lang, "lower",
+          function::BuiltInFuncType{OperatorId::Lower,
+                                    function::StringFunctions::_Lower},
+          txn);
       /**
        * decimal functions
        */
