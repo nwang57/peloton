@@ -221,8 +221,8 @@ uint32_t StringFunctions::Length(
   return length;
 }
 
-char* StringFunctions::Upper(executor::ExecutorContext &ctx, const char *str,
-    uint32_t length) {
+char *StringFunctions::Upper(executor::ExecutorContext &ctx, const char *str,
+                             uint32_t length) {
   PL_ASSERT(str != nullptr);
 
   // Allocate new memory
@@ -240,8 +240,8 @@ char* StringFunctions::Upper(executor::ExecutorContext &ctx, const char *str,
   return new_str;
 }
 
-char* StringFunctions::Lower(executor::ExecutorContext &ctx, const char *str,
-    uint32_t length) {
+char *StringFunctions::Lower(executor::ExecutorContext &ctx, const char *str,
+                             uint32_t length) {
   PL_ASSERT(str != nullptr);
 
   // Allocate new memory
@@ -259,13 +259,14 @@ char* StringFunctions::Lower(executor::ExecutorContext &ctx, const char *str,
   return new_str;
 }
 
-StringFunctions::StrWithLen StringFunctions::Concat(executor::ExecutorContext &ctx,
-    const char **concat_strs, const uint32_t *str_lens, uint32_t num_strs) {
+StringFunctions::StrWithLen StringFunctions::Concat(
+    executor::ExecutorContext &ctx, const char **concat_strs,
+    const uint32_t *str_lens, uint32_t num_strs) {
   PL_ASSERT(concat_strs != nullptr);
   PL_ASSERT(str_lens != nullptr);
   // Get total length of the result string
   uint32_t total_len = 0;
-  for(uint32_t i = 0; i < num_strs; i++) {
+  for (uint32_t i = 0; i < num_strs; i++) {
     if (str_lens[i] != 0) {
       // non-null string, null string will have length 0
       total_len += (str_lens[i] - 1);
@@ -279,7 +280,7 @@ StringFunctions::StrWithLen StringFunctions::Concat(executor::ExecutorContext &c
   auto *new_str = reinterpret_cast<char *>(pool->Allocate(total_len));
 
   // Perform concat
-  char* ptr = new_str;
+  char *ptr = new_str;
   for (uint32_t i = 0; i < num_strs; i++) {
     if (str_lens[i] != 0) {
       PL_MEMCPY(ptr, concat_strs[i], str_lens[i] - 1);
@@ -298,8 +299,8 @@ type::Value StringFunctions::_Upper(const std::vector<type::Value> &args) {
   }
   executor::ExecutorContext ctx{nullptr};
   uint32_t length = args[0].GetLength();
-  char* ret = StringFunctions::Upper(ctx, args[0].GetAs<const char *>(),
-                                         length);
+  char *ret =
+      StringFunctions::Upper(ctx, args[0].GetAs<const char *>(), length);
   std::string str(ret, length - 1);
   return type::ValueFactory::GetVarcharValue(str);
 }
@@ -311,8 +312,8 @@ type::Value StringFunctions::_Lower(const std::vector<type::Value> &args) {
   }
   executor::ExecutorContext ctx{nullptr};
   uint32_t length = args[0].GetLength();
-  char* ret = StringFunctions::Lower(ctx, args[0].GetAs<const char *>(),
-                                         length);
+  char *ret =
+      StringFunctions::Lower(ctx, args[0].GetAs<const char *>(), length);
   std::string str(ret, length - 1);
   return type::ValueFactory::GetVarcharValue(str);
 }
@@ -324,8 +325,8 @@ type::Value StringFunctions::_Concat(const std::vector<type::Value> &args) {
   }
   executor::ExecutorContext ctx{nullptr};
   auto ret = StringFunctions::Concat(ctx, args[0].GetAs<const char **>(),
-                                         args[1].GetAs<uint32_t*>(),
-                                         args[2].GetAs<uint32_t>());
+                                     args[1].GetAs<uint32_t *>(),
+                                     args[2].GetAs<uint32_t>());
   std::string str(ret.str, ret.length - 1);
   return type::ValueFactory::GetVarcharValue(str);
 }
