@@ -87,7 +87,7 @@ class StringFunctions {
                          uint32_t length);
 
   static StrWithLen Concat(executor::ExecutorContext &ctx, const char **concat_strs,
-                         uint32_t *str_lens, uint32_t num_strs);
+                         const uint32_t *str_lens, uint32_t num_strs);
 
   static type::Value _Upper(const std::vector<type::Value> &args);
 

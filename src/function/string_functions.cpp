@@ -260,7 +260,7 @@ char* StringFunctions::Lower(executor::ExecutorContext &ctx, const char *str,
 }
 
 StringFunctions::StrWithLen StringFunctions::Concat(executor::ExecutorContext &ctx,
-    const char **concat_strs, uint32_t *str_lens, uint32_t num_strs) {
+    const char **concat_strs, const uint32_t *str_lens, uint32_t num_strs) {
   PL_ASSERT(concat_strs != nullptr);
   PL_ASSERT(str_lens != nullptr);
   // Get total length of the result string
