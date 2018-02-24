@@ -288,6 +288,10 @@ StringFunctions::StrWithLen StringFunctions::Concat(
     }
   }
 
+  if (total_len == 1) {
+    return StringFunctions::StrWithLen{nullptr, 1};
+  }
+
   // We done
   return StringFunctions::StrWithLen{new_str, total_len};
 }

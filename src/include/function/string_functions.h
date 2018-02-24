@@ -79,22 +79,22 @@ class StringFunctions {
                          uint32_t length);
 
   // Upper case all the letters in the string
-  static char* Upper(executor::ExecutorContext &ctx, const char *str,
-                         uint32_t length);
+  static char *Upper(executor::ExecutorContext &ctx, const char *str,
+                     uint32_t length);
 
   // Lower case all the letters in the string
-  static char* Lower(executor::ExecutorContext &ctx, const char *str,
-                         uint32_t length);
+  static char *Lower(executor::ExecutorContext &ctx, const char *str,
+                     uint32_t length);
 
-  static StrWithLen Concat(executor::ExecutorContext &ctx, const char **concat_strs,
-                         const uint32_t *str_lens, uint32_t num_strs);
+  static StrWithLen Concat(executor::ExecutorContext &ctx,
+                           const char **concat_strs, const uint32_t *str_lens,
+                           uint32_t num_strs);
 
   static type::Value _Upper(const std::vector<type::Value> &args);
 
   static type::Value _Lower(const std::vector<type::Value> &args);
 
   static type::Value _Concat(const std::vector<type::Value> &args);
-
 };
 
 }  // namespace function
