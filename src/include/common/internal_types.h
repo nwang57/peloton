@@ -9,7 +9,6 @@
 // Copyright (c) 2015-2017, Carnegie Mellon University Database Group
 //
 //===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include <bitset>
@@ -28,8 +27,13 @@
 #include "type/type_id.h"
 #include "common/logger.h"
 #include "common/macros.h"
+#include "container/cuckoo_map.h"
 
 namespace peloton {
+
+class ItemPointer;
+struct ItemPointerHasher;
+class ItemPointerComparator;
 
 // For all of the enums defined in this header, we will
 // use this value to indicate that it is an invalid value
@@ -1199,9 +1203,9 @@ std::string RWTypeToString(RWType type);
 RWType StringToRWType(const std::string &str);
 std::ostream &operator<<(std::ostream &os, const RWType &type);
 
-// block -> offset -> type
-typedef std::unordered_map<oid_t, std::unordered_map<oid_t, RWType>>
-    ReadWriteSet;
+// ItemPointer -> type
+typedef CuckooMap<ItemPointer, RWType, ItemPointerHasher, ItemPointerComparator>
+   ReadWriteSet;
 
 // this enum is to identify why the version should be GC'd.
 enum class GCVersionType {
@@ -1340,6 +1344,7 @@ enum class RuleType : uint32_t {
   MARK_JOIN_INNER_JOIN_TO_INNER_JOIN,
   MARK_JOIN_FILTER_TO_INNER_JOIN,
   PULL_FILTER_THROUGH_MARK_JOIN,
+  PULL_FILTER_THROUGH_AGGREGATION,
 
   // Place holder to generate number of rules compile time
   NUM_RULES
