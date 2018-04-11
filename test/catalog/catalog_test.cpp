@@ -151,6 +151,39 @@ TEST_F(CatalogTests, CreatingTable) {
   //           72);
 }
 
+TEST_F(CatalogTests, CacheTableObject) {
+  auto &txn_manager = concurrency::TransactionManagerFactory::GetInstance();
+  auto txn = txn_manager.BeginTransaction();
+
+  std::string database_name = "EMP_DB";
+  std::string table_name = "department_table";
+  LOG_TRACE("Looking for table %s in database %s", table_name.c_str(),
+            database_name.c_str());
+
+  // first put the table_object into the cache
+  auto database_object =
+    catalog::Catalog::GetInstance()->GetDatabaseObject(database_name, txn);
+
+  auto table_object = database_object->GetTableObject(table_name);
+
+  auto cached_result = database_object->GetTableObject(table_name, true);
+
+  EXPECT_NE(nullptr, cached_result); // After the first fetch, table object should be in the cache
+
+  table_object = nullptr;
+
+  // retry to fetch the table object from the cache
+  // since this happens in the range of a single transaction, it should success
+  database_object = catalog::Catalog::GetInstance()->GetDatabaseObject(database_name, txn);
+
+  auto cached_result_p = database_object->GetTableObject(table_name, true);
+         
+  EXPECT_EQ(nullptr, cached_result_p);
+
+
+  txn_manager.CommitTransaction(txn);
+}
+
 TEST_F(CatalogTests, TableObject) {
   auto &txn_manager = concurrency::TransactionManagerFactory::GetInstance();
   auto txn = txn_manager.BeginTransaction();
